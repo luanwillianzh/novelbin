@@ -31,7 +31,7 @@ def novel_info(novel_id):
     title = t.translate(html.fromstring(r.text).xpath("//h3[@class='title']/text()")[0]).text #.text.find_all("h3", {"class": "title"})[0].text, dest="pt").text
     desc = t.translate(h.find_all("div", {"class": "desc-text"})[0].text, dest="pt").text
     caps = {}
-    lista = [ caps.update({a.values()[0]:a.values()[1]}) for a in html.fromstring(requests.get(f"https://novelbin.com/ajax/chapter-option?novelId={novel_id}").text).xpath("//option") ]
+    lista = [ caps.update({a.values()[0]:f"http://104.18.37.248/b/{novel_id}/{a.values()[0]}"}) for a in html.fromstring(requests.get(f"https://novelbin.com/ajax/chapter-option?novelId={novel_id}").text).xpath("//option") ]
     return {"sucesso": True, "resultado": {"title": title, "desc": desc, "cover": f"https://novelbin.me/media/novel/{novel_id}.jpg", "chapters": caps}}
 
 @app.get("/novel/{novel_id}/{chapter_id}")
@@ -41,9 +41,9 @@ def chapter(novel_id, chapter_id):
     return {"sucesso": False}
   else:
     caps = {}
-    lista = [ caps.update({a.values()[0]:a.values()[1]}) for a in html.fromstring(requests.get(f"https://novelbin.com/ajax/chapter-option?novelId={novel_id}").text).xpath("//option") ]
+    lista = [ caps.update({a.values()[0]:f"http://104.18.37.248/b/{novel_id}/{a.values()[0]}"}) for a in html.fromstring(requests.get(f"https://novelbin.com/ajax/chapter-option?novelId={novel_id}").text).xpath("//option") ]
     if chapter_id in caps:
-      r = requests.get(caps[chapter_id]).text
+      r = requests.get(caps[chapter_id], headers={"Host": "novelbin.com"}).text
       h = bs(r, features="lxml")
       div = str(h.find_all("div", {"class": "chr-c"})[0])
       title = str(h.find_all("span", {"class": "chr-text"})[0])
