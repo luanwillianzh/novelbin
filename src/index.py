@@ -27,7 +27,7 @@ def novel_info(novel_id):
   if r.status_code == 404:
     return {"sucesso": False}
   else:
-    h = bs(r.text)
+    h = bs(r.text, features="lxml")
     title = t.translate(html.fromstring(r.text).xpath("//h3[@class='title']/text()")[0]) #.text.find_all("h3", {"class": "title"})[0].text, dest="pt").text
     desc = t.translate(h.find_all("div", {"class": "desc-text"})[0].text, dest="pt").text
     caps = {}
@@ -44,7 +44,7 @@ def chapter(novel_id, chapter_id):
     lista = [ caps.update({a.values()[0]:a.values()[1]}) for a in html.fromstring(requests.get(f"https://novelbin.com/ajax/chapter-option?novelId={novel_id}").text).xpath("//option") ]
     if chapter_id in caps:
       r = requests.get(caps[chapter_id]).text
-      h = bs(r)
+      h = bs(r, features="lxml")
       div = str(h.find_all("div", {"class": "chr-c"})[0])
       title = str(h.find_all("span", {"class": "chr-text"})[0])
       title = html.fromstring(title).xpath("//text()")[0]
