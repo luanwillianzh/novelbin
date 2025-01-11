@@ -23,7 +23,7 @@ def search(query):
 
 @app.get("/novel/{novel_id}")
 def novel_info(novel_id):
-  r = requests.get(f"https://novelbin.me/novel-book/{novel_id}")
+  r = requests.get(f"http://104.18.37.248/novel-book/{novel_id}", headers={"Host": "novelbin.com})
   if r.status_code == 404:
     return {"sucesso": False}
   else:
