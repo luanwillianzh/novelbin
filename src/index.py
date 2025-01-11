@@ -36,7 +36,7 @@ def novel_info(novel_id):
 
 @app.get("/novel/{novel_id}/{chapter_id}")
 def chapter(novel_id, chapter_id):
-  r = requests.get(f"https://104.18.37.248/novel-book/{novel_id}", headers={"Host": "novelbin.com"})
+  r = requests.get(f"http://104.18.37.248/novel-book/{novel_id}", headers={"Host": "novelbin.com"})
   if r.status_code == 404:
     return {"sucesso": False}
   else:
