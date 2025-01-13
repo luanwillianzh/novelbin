@@ -6,6 +6,9 @@ from html2text import html2text as h2t
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 import urllib.parse
+from googletrans import Translator
+
+t = Translator()
 app = FastAPI()
 
 @app.get("/", response_class=HTMLResponse)
