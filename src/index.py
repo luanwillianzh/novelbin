@@ -3,11 +3,9 @@ from bs4 import BeautifulSoup as bs
 from lxml import html
 from markdown2 import markdown as md
 from html2text import html2text as h2t
-from googletrans import Translator as trans
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
-
-t = trans()
+import urllib.parse
 app = FastAPI()
 
 @app.get("/", response_class=HTMLResponse)
@@ -48,9 +46,9 @@ def chapter(novel_id, chapter_id):
       div = str(h.find_all("div", {"class": "chr-c"})[0])
       title = str(h.find_all("span", {"class": "chr-text"})[0])
       title = html.fromstring(title).xpath("//text()")[0]
-      text = h2t(div).split("\n\n")
-      js = trans().translate(text, dest="pt")
-      trad = "\n\n".join([ i.text for i in js])
+      text = urllib.parse.quote_plus(h2t(div))
+      js = requests.get(f"https://translate.googleapis.com/translate_a/single?dt=t&dt=bd&dt=qc&dt=rm&dt=ex&client=gtx&hl=en&sl=auto&tl=pt&q={text}&dj=1&tk=536966.536966").json()
+      trad = "".join([ i["trans"] for i in js["sentences"] ])
       epcontent = md(trad)
       chapter = f'''<html><head><title>{title}</title></head><body><h1>{title}</h1>{epcontent}</body></html>'''
       return HTMLResponse(chapter, status_code=200)
