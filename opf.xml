@@ -6,13 +6,13 @@
 
     <dc:title>{{  title  }}</dc:title>
 
-    <dc:creator opf:role="aut">{{ creator }}</dc:creator>
+    <dc:creator opf:role="aut">LuanW04</dc:creator>
 
-    <dc:language>{{ language }}</dc:language>
+    <dc:language>pt-BR</dc:language>
 
     <dc:rights>{{ rights }}</dc:rights>
 
-    <dc:publisher>{{ publisher }}</dc:publisher>
+    <dc:publisher>LuanW04</dc:publisher>
 
     <dc:identifier opf:scheme="UUID">{{ uid }}</dc:identifier>
 
@@ -56,7 +56,7 @@
 
   <guide>
 
-    <reference type="toc" title="目录" href="toc.html"/>
+    <reference type="toc" title="Índice" href="toc.html"/>
 
   </guide>
 
