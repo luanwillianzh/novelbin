@@ -48,8 +48,8 @@ def chapter(novel_id, chapter_id):
     if chapter_id in caps:
       r = requests.get(caps[chapter_id], headers={"Host": "novelbin.com"}).text
       h = bs(r, features="lxml")
-      div = h2t.handle(str(h.find_all("div", {"class": "chr-c"})[0])).split("\n\n")
-      title = h.find_all("span", {"class": "chr-text"})[0].text
+      div = [ urllib.parse.quote(i.replace("\n", " "), safe='') for i in h2t.handle(str(h.find_all("div", {"class": "chr-c"})[0])).split("\n\n") ]
+      title = urllib.parse.quote(h.find_all("span", {"class": "chr-text"})[0].text, safe='')
       #
       #
       #
