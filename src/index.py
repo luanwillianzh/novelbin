@@ -2,12 +2,14 @@ import requests
 from bs4 import BeautifulSoup as bs
 from lxml import html
 from markdown2 import markdown as md
-from html2text import html2text as h2t
+import html2text
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 import urllib.parse
 from googletrans import Translator
 
+h2t = html2text.HTML2Text()
+h2t.ignore_images = True
 t = Translator()
 app = FastAPI()
 
@@ -46,7 +48,7 @@ def chapter(novel_id, chapter_id):
     if chapter_id in caps:
       r = requests.get(caps[chapter_id], headers={"Host": "novelbin.com"}).text
       h = bs(r, features="lxml")
-      div = str(h.find_all("div", {"class": "chr-c"})[0])
+      div = h2t.handle(str(h.find_all("div", {"class": "chr-c"})[0])).split("\n\n")
       title = h.find_all("span", {"class": "chr-text"})[0].text
       #
       #
@@ -54,7 +56,8 @@ def chapter(novel_id, chapter_id):
       #js = requests.get(f"https://translate.googleapis.com/translate_a/single?dt=t&dt=bd&dt=qc&dt=rm&dt=ex&client=gtx&hl=en&sl=auto&tl=pt&q={text}&dj=1&tk=536966.536966").json()
       #trad = "".join([ i["trans"] for i in js["sentences"] ])
       #epcontent = md(trad)
-      chapter = f'''<html><head><title>{title}</title></head><body><h1>{title}</h1>{div}</body></html>'''
-      return HTMLResponse(chapter, status_code=200)
+      #chapter = f'''<html><head><title>{title}</title></head><body><h1>{title}</h1>{div}</body></html>'''
+      chapter = {"sucesso": True, "resultado": {"title": title, "content": div}}
+      return chapter
     else:
       return {"sucesso": False}
