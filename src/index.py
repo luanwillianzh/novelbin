@@ -47,13 +47,11 @@ def chapter(novel_id, chapter_id):
       r = requests.get(caps[chapter_id], headers={"Host": "novelbin.com"}).text
       h = bs(r, features="lxml")
       div = str(h.find_all("div", {"class": "chr-c"})[0])
-      title = str(h.find_all("span", {"class": "chr-text"})[0])
-      title = html.fromstring(title).xpath("//text()")[0]
-      text = urllib.parse.quote_plus(h2t(div))
-      js = requests.get(f"https://translate.googleapis.com/translate_a/single?dt=t&dt=bd&dt=qc&dt=rm&dt=ex&client=gtx&hl=en&sl=auto&tl=pt&q={text}&dj=1&tk=536966.536966").json()
-      trad = "".join([ i["trans"] for i in js["sentences"] ])
-      epcontent = md(trad)
-      chapter = f'''<html><head><title>{title}</title></head><body><h1>{title}</h1>{epcontent}</body></html>'''
+      title = h.find_all("span", {"class": "chr-text"})[0].text
+      #js = requests.get(f"https://translate.googleapis.com/translate_a/single?dt=t&dt=bd&dt=qc&dt=rm&dt=ex&client=gtx&hl=en&sl=auto&tl=pt&q={text}&dj=1&tk=536966.536966").json()
+      #trad = "".join([ i["trans"] for i in js["sentences"] ])
+      #epcontent = md(trad)
+      chapter = f'''<html><head><title>{title}</title></head><body><h1>{title}</h1>{div}</body></html>'''
       return HTMLResponse(chapter, status_code=200)
     else:
       return {"sucesso": False}
