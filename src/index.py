@@ -15,7 +15,7 @@ app = FastAPI()
 
 @app.get("/", response_class=HTMLResponse)
 def index():
-  return "Hello World!"
+  return "Novelbin API!"
 
 @app.get("/search/{query}")
 def search(query):
