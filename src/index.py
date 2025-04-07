@@ -16,26 +16,26 @@ def index():
 
 @app.get("/search/{query}")
 def search(query):
-    resp = requests.get(f"http://104.18.37.248/ajax/search-novel?keyword={urllib.parse.quote_plus(query)}", headers={"Host": "novelbin.luanwillianzh04.workers.dev"}).text
+    resp = requests.get(f"https://novelbin.com/ajax/search-novel?keyword={urllib.parse.quote_plus(query)}").text
     soup = bs(resp, 'lxml')
     lista = soup.select("a")[:-1]
-    return {"sucesso": True, "resultado": [ {"nome": i.text.strip(), "url": i.get("href").split("/")[-1], "cover": f"https://novelbin.luanwillianzh04.workers.dev/media/novel/{i.get('href').split('/')[-1]}.jpg"} for i in lista ]}
+    return {"sucesso": True, "resultado": [ {"nome": i.text.strip(), "url": i.get("href").split("/")[-1], "cover": f"https://novelbin.com/media/novel/{i.get('href').split('/')[-1]}.jpg"} for i in lista ]}
 
 @app.get("/novel/{novel_id}")
 def novel_info(novel_id):
-    resp = requests.get(f"https://novelbin.luanwillianzh04.workers.dev/b/{novel_id}#tab-chapters-title").text
+    resp = requests.get(f"https://novelbin.com/b/{novel_id}#tab-chapters-title").text
     soup = bs(resp, 'lxml')
     title = soup.select_one("h3.title").text.strip()
     desc = soup.select_one("div.desc-text").text.strip()
-    cover = f"https://novelbin.luanwillianzh04.workers.dev/media/novel/{novel_id}.jpg"
-    resp_chap = requests.get(f"https://novelbin.luanwillianzh04.workers.dev/ajax/chapter-option?novelId={novel_id}").text
+    cover = f"https://novelbin.com/media/novel/{novel_id}.jpg"
+    resp_chap = requests.get(f"https://novelbin.com/ajax/chapter-option?novelId={novel_id}").text
     soup_chap = bs(resp_chap, 'lxml')
     chapters = [ i.get("chapter-id") for i in soup_chap.select("option") ]
     return {"title": title, "desc": desc, "cover": cover, "chapters": chapters}
 
 @app.get("/novel/{novel_id}/{chapter_id}")
 def chapter(novel_id, chapter_id):
-    resp = requests.get(f"https://novelbin.luanwillianzh04.workers.dev/b/{novel_id}/{chapter_id}").text
+    resp = requests.get(f"https://novelbin.com/b/{novel_id}/{chapter_id}").text
     soup = bs(resp, 'lxml')
     title = soup.select_one("a.novel-title").text.strip()
     subtitle = soup.select_one(".chr-text").text.strip()
