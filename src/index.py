@@ -16,7 +16,7 @@ def index():
 
 @app.get("/search/{query}")
 def search(query):
-    resp = requests.get(f"https://novelbin.luanwillianzh04.workers.dev/ajax/search-novel?keyword={urllib.parse.quote_plus(query)}").text
+    resp = requests.get(f"http://104.18.37.248/ajax/search-novel?keyword={urllib.parse.quote_plus(query)}", headers={"Host": "novelbin.luanwillianzh04.workers.dev"}).text
     soup = bs(resp, 'lxml')
     lista = soup.select("a")[:-1]
     return {"sucesso": True, "resultado": [ {"nome": i.text.strip(), "url": i.get("href").split("/")[-1], "cover": f"https://novelbin.luanwillianzh04.workers.dev/media/novel/{i.get('href').split('/')[-1]}.jpg"} for i in lista ]}
