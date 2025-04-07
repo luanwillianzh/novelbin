@@ -1,16 +1,13 @@
 import requests
 from bs4 import BeautifulSoup as bs
-from lxml import html
 from markdown2 import markdown as md
 import html2text
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 import urllib.parse
-from googletrans import Translator
 
 h2t = html2text.HTML2Text()
 h2t.ignore_images = True
-t = Translator()
 app = FastAPI()
 
 @app.get("/", response_class=HTMLResponse)
