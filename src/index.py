@@ -38,7 +38,7 @@ def novel_info(novel_id):
     desc = soup.select_one("div.desc-text").text.strip()
     cover = f"https://novelbin.com/media/novel/{novel_id}.jpg"
     resp_chap = requests.get(f"https://novelbin.com/ajax/chapter-option?novelId={novel_id}").text
-    soup_chap = bs(resp_chap, 'lxml')
+    soup_chap = bs(resp_chap, 'html.parser')
     chapters = [ i.get("chapter-id") for i in soup_chap.select("option") ]
     return {"title": title, "desc": desc, "cover": cover, "chapters": chapters}
   except Exception as e:
