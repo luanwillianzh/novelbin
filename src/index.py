@@ -32,7 +32,7 @@ def search(query):
 @app.get("/novel/{novel_id}")
 def novel_info(novel_id):
   try:
-    resp = requests.get(f"https://novelbin.com/b/{novel_id}#tab-chapters-title").text
+    resp = requests.get(f"https://novelbin.luanwillianzh04.workers.dev/b/{novel_id}#tab-chapters-title").text
     soup = bs(resp, 'html.parser')
     title = soup.select_one("h3.title").text.strip()
     desc = soup.select_one("div.desc-text").text.strip()
