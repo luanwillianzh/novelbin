@@ -24,8 +24,8 @@ def index():
 
 @app.get("/search/{query}")
 def search(query):
-    resp = requests.get(f"https://novelbin.com/ajax/search-novel?keyword={query}", headers={"User-Agent": "curl/4.0.0"}).text
-    soup = bs(resp, 'lxml')
+    resp = requests.get(f"https://novelbin.com/ajax/search-novel?keyword={query}").text
+    soup = bs(resp, 'html.parser')
     lista = soup.select("a")[:-1]
     return {"sucesso": True, "resultado": [ {"nome": i.text.strip(), "url": i.get("href").split("/")[-1], "cover": f"https://novelbin.com/media/novel/{i.get('href').split('/')[-1]}.jpg"} for i in lista ]}
 
@@ -33,7 +33,7 @@ def search(query):
 def novel_info(novel_id):
   try:
     resp = requests.get(f"https://novelbin.com/b/{novel_id}#tab-chapters-title").text
-    soup = bs(resp, 'lxml')
+    soup = bs(resp, 'html.parser')
     title = soup.select_one("h3.title").text.strip()
     desc = soup.select_one("div.desc-text").text.strip()
     cover = f"https://novelbin.com/media/novel/{novel_id}.jpg"
@@ -47,7 +47,7 @@ def novel_info(novel_id):
 @app.get("/novel/{novel_id}/{chapter_id}")
 def chapter(novel_id, chapter_id):
     resp = requests.get(f"https://novelbin.com/b/{novel_id}/{chapter_id}").text
-    soup = bs(resp, 'lxml')
+    soup = bs(resp, 'html.parser')
     title = soup.select_one("a.novel-title").text.strip()
     subtitle = soup.select_one(".chr-text").text.strip()
     content = soup.select_one("#chr-content, #chapter-content")
