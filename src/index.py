@@ -5,10 +5,18 @@ import html2text
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 import urllib.parse
+from fastapi.middleware.cors import CORSMiddleware
 
 h2t = html2text.HTML2Text()
 h2t.ignore_images = True
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # ou defina domínios específicos
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/", response_class=HTMLResponse)
 def index():
@@ -34,7 +42,7 @@ def novel_info(novel_id):
     chapters = [ i.get("chapter-id") for i in soup_chap.select("option") ]
     return {"title": title, "desc": desc, "cover": cover, "chapters": chapters}
   except Exception as e:
-    return {"Erro": e}
+    return {"Erro": str(e)}
 
 @app.get("/novel/{novel_id}/{chapter_id}")
 def chapter(novel_id, chapter_id):
