@@ -33,7 +33,7 @@ def novel_info(novel_id):
     soup_chap = bs(resp_chap, 'lxml')
     chapters = [ i.get("chapter-id") for i in soup_chap.select("option") ]
     return {"title": title, "desc": desc, "cover": cover, "chapters": chapters}
-  except Exception as e
+  except Exception as e:
     return {"Erro": e}
 
 @app.get("/novel/{novel_id}/{chapter_id}")
