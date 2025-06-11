@@ -21,7 +21,8 @@ def get_novel_info(novel):
     desc = "\n".join([ p.text for p in soup.find_all("section", {"class": "story__summary content-section"})[0] ])
     cover = soup.select_one(".webfeedsFeaturedVisual")["src"]
     chapters = [(a.text, a["href"].split("/")[-2]) for a in soup.select(".chapter-group__list a")]
-    return {"nome": name, "desc": desc, "cover": cover, "chapters": chapters}
+    genres = [ [a["href"].split("/")[-2], a.text] for a in soup.select("._taxonomy-genre") ]
+    return {"nome": name, "desc": desc, "cover": cover, "chapters": chapters, "genres": genres}
 
 @app.get("/novel/{novel}/chapter/{chapter}")
 def get_chapter(novel, chapter):
